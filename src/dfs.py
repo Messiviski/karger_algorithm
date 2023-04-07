@@ -8,5 +8,12 @@ class DFS:
         self.time = 0
         self.nodes = [DFSNode(0, 0, None) for i in range(graph_instance.nodes)]
 
-    def run(self, node):
-        print(1)
+    def run(self, initial_node):
+        self.time += 1
+        self.nodes[node - 1].input = self.time
+
+        for i in range(len(self.nodes)):
+            if(self.nodes[i].input != 0):
+                # must mark the father and add mark the new edge
+                print(1)
+
