@@ -1,5 +1,6 @@
 from graph import Graph
-from dfs import DFS
 
-graph_instance = Graph('./in/grafo1.txt')
-DFS(graph_instance).run(1)
+file_name = 'graph_type1_1'
+file_path = f'./src/in/{file_name}'
+
+graph_instance = Graph(file_path)
