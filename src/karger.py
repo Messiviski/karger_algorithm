@@ -11,6 +11,7 @@ class Karger:
         self.nodes_count = graph.nodes + 1
 
     def run(self) -> int:
+        self.nodes_count = self.graph.nodes
         self.aggregated_nodes_description = {}
 
         graph = {
@@ -19,12 +20,15 @@ class Karger:
         }
 
         while graph['nodes'] != 2:
+            if self.__reached_the_minimum(graph):
+                break
+
             new_edges = []
             choosed_edge = random.choice(graph['edges'])
             first_node, second_node = choosed_edge
 
             self.aggregated_nodes_description[
-                str(self.nodes_count)
+                    str(self.nodes_count)
             ] = choosed_edge
 
             graph['nodes'] -= 1
@@ -48,17 +52,18 @@ class Karger:
 
                 new_edges.append(edge)
 
-            print('---------------------------------------------')
-            print(f'Choosed Edge -> {choosed_edge}')
-            print(f'Old Edges -> {graph["edges"]}')
-
             graph['edges'] = new_edges
-            graph['nodes'] = len(new_edges)
             self.nodes_count += 1
 
-            print(f'New Edges -> {new_edges}')
-
         return len(graph['edges'])
+
+    def __reached_the_minimum(self, graph: dict) -> bool:
+        unique_edges = set(graph['edges'])
+
+        if len(unique_edges) == 1:
+            return True
+
+        return False
 
     def __handle_edge_creation(self, node: int, edge: Edge) -> None:
         new_edge = [self.nodes_count if edge_node == node
