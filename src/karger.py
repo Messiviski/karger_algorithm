@@ -1,11 +1,12 @@
 import random
-from typing import TypeAlias, Tuple
 from graph import Graph
+from algorithm import Algorithm
+from typing import TypeAlias, Tuple
 
 Edge: TypeAlias = Tuple[int, int]
 
 
-class Karger:
+class Karger(Algorithm):
     def __init__(self, graph: Graph) -> None:
         self.graph = graph
         self.nodes_count = graph.nodes + 1
