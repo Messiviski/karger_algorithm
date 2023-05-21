@@ -6,4 +6,4 @@ file_path = f'./src/in/{file_name}'
 
 graph_instance = Graph(file_path)
 
-analyse(graph_instance, 1, 10000)
+analyse(graph_instance, 1, 100, 1000)
