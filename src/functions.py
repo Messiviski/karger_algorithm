@@ -2,63 +2,90 @@ import numpy as np
 from graph import Graph
 from naive import Naive
 from karger import Karger
-from algorithm import Algorithm
 import matplotlib.pyplot as plt
 
 
-def analyse(graph: Graph, min_cut: int, n_exec: int, n_iter: int) -> None:
+def analyse(
+            graph: Graph,
+            min_cut: int,
+            n_exec: int,
+            n_iter: int,
+            e: float = 0.01
+        ) -> None:
     karger = Karger(graph)
     naive = Naive(graph)
 
-    probabilties = []
+    KARGER = 0
+    NAIVE = 1
+
+    probabilities = []
     iterations = []
 
-    for i in range(4):
+    while True:
+        prob_karger = prob_naive = 0
         iterations_karger = iterations_naive = 0
 
         for j in range(1, n_exec + 1):
-            result = run_algorithm(karger, n_iter)
-            if result == min_cut:
+            results = iterate(karger, naive, n_iter)
+
+            if results[KARGER] == min_cut:
                 iterations_karger += 1
 
-        for j in range(1, n_exec + 1):
-            result = run_algorithm(naive, n_iter)
-            if result == min_cut:
+            if results[NAIVE] == min_cut:
                 iterations_naive += 1
 
-        iterations.append([iterations_karger, iterations_naive])
-        probabilties.append(
-            [iterations_karger / n_exec, iterations_naive / n_exec]
-        )
+        prob_karger = iterations_karger / n_exec
+        prob_naive = iterations_naive / n_exec
+
+        changed = has_changed(probabilities, prob_naive, e)
+
+        iterations.append(n_iter)
+        probabilities.append([prob_karger, prob_naive])
+
+        if not changed:
+            break
 
         n_iter += 20
 
-        print(f'=========== {i} ===========')
-        print(f'Karger  {iterations_karger / n_exec} - {n_iter}')
-        print(f'Naive   {iterations_naive / n_exec} - {n_iter}')
-
-    plot(iterations, probabilties)
+    plot(iterations, probabilities)
 
 
-def run_algorithm(algorithm_instance: Algorithm, n_iter: int) -> int:
-    best_result = algorithm_instance.run()
+def iterate(karger: Karger, naive: Naive, n_iter: int) -> list[int, int]:
+    karger_best_result = karger.run()
+    naive_best_result = naive.run()
 
     for i in range(n_iter):
-        new_result = algorithm_instance.run()
-        if new_result < new_result:
-            best_result = new_result
+        karger_new_result = karger.run()
+        naive_new_result = naive.run()
 
-    return best_result
+        if karger_new_result < karger_best_result:
+            karger_best_result = karger_new_result
+
+        if naive_new_result < naive_best_result:
+            naive_best_result = naive_new_result
+
+    return [karger_best_result, naive_best_result]
+
+
+def has_changed(probabilities: list, probability: float, e: float) -> bool:
+    if len(probabilities) == 0:
+        return True
+
+    last_naive_probability = probabilities[-1][-1]
+
+    if (probability - last_naive_probability) < e:
+        return False
+
+    return True
 
 
 def plot(x: list[int, int], y: list[float, float]) -> None:
     np_probabilities = np.array(y)
-    np_iterations = np.array(x)
 
     # Karger
-    plt.plot(np_iterations[0:, 0], np_probabilities[0:, 0])
+    plt.plot(x, np_probabilities[0:, 0], 'r')
 
     # Naive
-    plt.plot(np_iterations[0:, 1], np_probabilities[0:, 1])
+    plt.plot(x, np_probabilities[0:, 1], 'b')
 
     plt.show()
