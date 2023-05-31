@@ -38,7 +38,7 @@ def analyse(
         if check_stop_conditions(probabilities, e):
             stop_count += 1
 
-        if stop_count == 5:
+        if stop_count >= 5 and karger_stop_condition is True:
             break
 
         n_iter += 20
