@@ -12,7 +12,7 @@ class Karger(Algorithm):
         self.nodes_count = graph.nodes + 1
 
     def run(self) -> int:
-        self.nodes_count = self.graph.nodes
+        self.nodes_count = self.graph.nodes + 1
         self.aggregated_nodes_description = {}
 
         graph = {
@@ -20,7 +20,7 @@ class Karger(Algorithm):
            'nodes': self.graph.nodes
         }
 
-        while graph['nodes'] != 2:
+        while True:
             if self.__reached_the_minimum(graph):
                 break
 
@@ -31,6 +31,10 @@ class Karger(Algorithm):
             self.aggregated_nodes_description[
                     str(self.nodes_count)
             ] = choosed_edge
+
+            #   print('------------------------------')
+            #   print(f'Escolhido -> {choosed_edge}')
+            #   print(f"Vertices -> {graph['edges']}\n")
 
             graph['nodes'] -= 1
 
@@ -62,6 +66,10 @@ class Karger(Algorithm):
         unique_edges = set(graph['edges'])
 
         if len(unique_edges) == 1:
+            #   print(unique_edges)
+            #   print('---------------------------------')
+            #   print(graph['edges'])
+            #   print(graph['nodes'])
             return True
 
         return False

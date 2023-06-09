@@ -5,6 +5,13 @@ from karger import Karger
 import matplotlib.pyplot as plt
 
 
+def read_out_file_and_get_the_minimum_cut(file_path: str) -> None:
+    FIRST_LINE = 0
+
+    file_without_new_lines = open(file_path).read().split('\n')
+    return file_without_new_lines[FIRST_LINE]
+
+
 def analyse(
         graph: Graph, min_cut: int, n_exec: int, n_iter: int,
         e: float = 0.01) -> None:
@@ -39,6 +46,9 @@ def analyse(
             stop_count += 1
 
         if stop_count >= 5 and karger_stop_condition is True:
+            break
+
+        if stop_count >= 10:
             break
 
         n_iter += 20

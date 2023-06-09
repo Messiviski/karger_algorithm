@@ -1,9 +1,9 @@
 from graph import Graph
-from functions import analyse
+from functions import read_out_file_and_get_the_minimum_cut, analyse
 
-file_name = 'graph_type1_1'
-file_path = f'./src/in/{file_name}'
+file_name = 'graph_type1_2'
 
-graph_instance = Graph(file_path)
+graph_instance = Graph(f'./src/in/{file_name}')
+min_cut = int(read_out_file_and_get_the_minimum_cut(f'./src/out/{file_name}'))
 
-analyse(graph_instance, 1, 1000, 5)
+analyse(graph_instance, min_cut, 100, 5)
